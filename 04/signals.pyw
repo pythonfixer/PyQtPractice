@@ -73,6 +73,23 @@ class Form3(QDialog):
     def announce(self, zeros):
         print("ZeroSpinBox has been at zero {} times".format(zeros))
 
+class Form4(QDialog):
+
+    def __init__(self, parent=None):
+        super().__init__(parent)
+
+        lineedit = QLineEdit()
+
+        layout = QHBoxLayout()
+        layout.addWidget(lineedit)
+        self.setLayout(layout)
+
+        self.connect(lineedit, SIGNAL("textChanged(QString)"), self.consoleEcho)
+        self.setWindowTitle("Signals and Slots")
+
+    def consoleEcho(self, text):
+        print(text)
+
 app = QApplication(sys.argv)
 form = None
 if len(sys.argv) == 1 or sys.argv[1] == '1':
@@ -81,6 +98,8 @@ elif sys.argv[1] == '2':
     form = Form2()
 elif sys.argv[1] == '3':
     form = Form3()
+elif sys.argv[1] == '4':
+    form = Form4()
 if form is not None:
     form.show()
     app.exec_()
