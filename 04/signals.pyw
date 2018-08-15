@@ -90,6 +90,23 @@ class Form4(QDialog):
     def consoleEcho(self, text):
         print(text)
 
+class TaxRate(QObject):
+
+    def __init__(self):
+        super().__init__()
+        self._rate = 17.5
+
+    def rate(self):
+        return self._rate
+
+    def setRate(self, rate):
+        if self._rate != rate:
+            self._rate = rate
+            self.emit(SIGNAL("rateChanged"), self._rate)
+
+def rateChanged(value):
+    print("Tax rate changed to {0:.2f}".format(value))
+
 app = QApplication(sys.argv)
 form = None
 if len(sys.argv) == 1 or sys.argv[1] == '1':
@@ -103,3 +120,8 @@ elif sys.argv[1] == '4':
 if form is not None:
     form.show()
     app.exec_()
+else:
+    var = TaxRate()
+    var.connect(var, SIGNAL("rateChanged"), rateChanged)
+    var.setRate(17.5)
+    var.setRate(8.5)
