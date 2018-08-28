@@ -14,7 +14,7 @@ class Form(QDialog):
         super().__init__(parent)
 
         self.numberFormatDlg = None
-        self.format = dict(thousandsseparator = ",", decimalmarker = ".", decimalplaces = 2, rednegatives = False)
+        self.format = dict(thousandsseparator=",", decimalmarker=".", decimalplaces=2, rednegatives=False)
         self.numbers = {}
         for x in range(self.X_MAX):
             for y in range(self.Y_MAX):
@@ -52,13 +52,14 @@ class Form(QDialog):
                 if self.format["decimalplaces"]:
                     fraction = "{0:.7f}".format(abs(fraction))
                     fraction = (self.format["decimalmarker"] + fraction[2:self.format["decimalplaces"] + 2])
+                else:
+                    fraction = ""
                 text = "{}{}{}".format(sign, "".join(digits), fraction)
                 item = QTableWidgetItem(text)
                 item.setTextAlignment(Qt.AlignRight | Qt.AlignVCenter)
                 if sign and self.format["rednegatives"]:
                     item.setBackgroundColor(Qt.red)
                 self.table.setItem(y, x, item)
-
 
 app = QApplication(sys.argv)
 form = Form()
