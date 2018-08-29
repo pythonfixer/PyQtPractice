@@ -4,6 +4,7 @@ import string
 import sys
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
+import numberformatdlg1
 
 class Form(QDialog):
 
@@ -30,6 +31,8 @@ class Form(QDialog):
         layout.addWidget(self.table)
         layout.addLayout(buttonLayout)
         self.setLayout(layout)
+
+        self.connect(formatButton1, SIGNAL("clicked()"), self.setNumberFormat)
 
         self.setWindowTitle("Numbers")
         self.refreshTable()
@@ -60,6 +63,12 @@ class Form(QDialog):
                 if sign and self.format["rednegatives"]:
                     item.setBackgroundColor(Qt.red)
                 self.table.setItem(y, x, item)
+
+    def setNumberFormat(self):
+        dialog = numberformatdlg1.NumberFormatDlg(self.format, self)
+        if dialog.exec_():
+            self.format = dialog.numberFormat()
+            self.refreshTable()
 
 app = QApplication(sys.argv)
 form = Form()

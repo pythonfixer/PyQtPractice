@@ -1,4 +1,3 @@
-import sys
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 
@@ -41,8 +40,15 @@ class NumberFormatDlg(QDialog):
 
         self.setWindowTitle("Set Number Format (Model)")
 
-app = QApplication(sys.argv)
-format = dict(thousandsseparator=",", decimalmarker=".", decimalplaces=2, rednegatives=False)
-form = NumberFormatDlg(format)
-form.show()
-app.exec_()
+    def accept(self):
+        thousands = self.thousandsEdit.text()
+        decimal = self.decimalMarkerEdit.text()
+
+        self.format["thousandsseparator"] = thousands
+        self.format["decimalmarker"] = decimal
+        self.format["decimalplaces"] = (self.decimalPlacesSpinBox.value())
+        self.format["rednegatives"] = (self.redNegativesCheckBox.isChecked())
+        QDialog.accept(self)
+
+    def numberFormat(self):
+        return self.format
