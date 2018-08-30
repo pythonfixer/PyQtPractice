@@ -54,7 +54,7 @@ class Form(QDialog):
                     digits.insert(0, digit)
                 if self.format["decimalplaces"]:
                     fraction = "{0:.7f}".format(abs(fraction))
-                    fraction = (self.format["decimalmarker"] + fraction[2:self.format["decimalplaces"] + 2])
+                    fraction = self.format["decimalmarker"] + fraction[2:self.format["decimalplaces"] + 2]
                 else:
                     fraction = ""
                 text = "{}{}{}".format(sign, "".join(digits), fraction)
