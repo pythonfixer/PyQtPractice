@@ -43,16 +43,16 @@ class MainWindow(QMainWindow):
         status.showMessage("Ready", 5000)
 
         fileNewAction = self.createAction("&New", self.fileNew, QKeySequence.New, "filenew", "Create an image file")
-        fileOpenAction = self.createAction("&Open", self.fileOpen, QKeySequence.Open, "fileopen", "Open an exists image file")
-        fileSaveAction = self.createAction("&Save", self.fileSave, QKeySequence.Save, "filesave", "Save the image file")
+        fileOpenAction = self.createAction("&Open", self.fileOpen, QKeySequence.Open, "fileopen", "Open an image file")
+        fileSaveAction = self.createAction("&Save", self.fileSave, QKeySequence.Save, "filesave", "Save the exists image file")
         fileSaveAsAction = self.createAction("Save &As", self.fileSaveAs, QKeySequence.SaveAs, "filesaveas", "Save the image file as another name")
         filePrintAction = self.createAction("&Print", self.filePrint, QKeySequence.Print, "fileprint", "Print the image file")
         fileQuitAction = self.createAction("&Quit", self.close, "Ctrl+Q", "filequit", "Quit the application")
         editInvertAction = self.createAction("&Invert", self.editInvert, "Ctrl+I", "editinvert", "Invert the color of the image", True, "toggled(bool)")
-        editSwapRedAndBlueAction = self.createAction("Swap &Red and Blue", self.editSwapRedAndBlue, "Ctrl+R", "editswap", "Swap the red and blue color of the image", True, "toggled(bool)")
+        editSwapRedAndBlueAction = self.createAction("Swap &Red And Blue", self.editSwapRedAndBlue, "Ctrl+R", "editswap", "Swap the red and blue color of the image", True, "toggled(bool)")
         editZoomAction = self.createAction("&Zoom", self.editZoom, "Ctrl+Z", "editzoom", "Zoom the image")
         editMirrorGroup = QActionGroup(self)
-        editUnMirrorAction = self.createAction("&UnMirrored", self.editUnMirror, "Ctrl+U", "editunmirror", "UnMirror the image", True, "toggled(bool)")
+        editUnMirrorAction = self.createAction("&UnMirror", self.editUnMirror, "Ctrl+U", "editunmirror", "Unmirrored the image", True, "toggled(bool)")
         editMirrorGroup.addAction(editUnMirrorAction)
         editMirrorHorizAction = self.createAction("Mirrored &Horizontally", self.editMirrorHorizontal, "Ctrl+H", "editmirrorhoriz", "Mirrored horizontally the image", True, "toggled(bool)")
         editMirrorGroup.addAction(editMirrorHorizAction)
@@ -73,9 +73,9 @@ class MainWindow(QMainWindow):
         helpMenu = self.menuBar().addMenu("&Help")
         self.addActions(helpMenu, (helpAboutAction, helpHelpAction))
 
-        fileToobar = self.addToolBar("File")
-        fileToobar.setObjectName("FileToolBar")
-        self.addActions(fileToobar, (fileNewAction, fileOpenAction, fileSaveAsAction))
+        fileToolbar = self.addToolBar("File")
+        fileToolbar.setObjectName("FileToolBar")
+        self.addActions(fileToolbar, (fileNewAction, fileOpenAction, fileSaveAsAction))
         editToolbar = self.addToolBar("Edit")
         editToolbar.setObjectName("EditToolBar")
         self.addActions(editToolbar, (editInvertAction, editSwapRedAndBlueAction, editUnMirrorAction, editMirrorHorizAction, editMirrorVertiAction))
@@ -154,8 +154,7 @@ class MainWindow(QMainWindow):
         self.statusBar().showMessage(message, 5000)
         self.listWidget.addItem(message)
         if self.filename:
-            self.setWindowTitle("Image Changer - {}[*]".format(
-                                os.path.basename(self.filename)))
+            self.setWindowTitle("Image Changer - {}[*]".format(os.path.basename(self.filename)))
         elif not self.image.isNull():
             self.setWindowTitle("Image Changer - Unnamed[*]")
         else:
@@ -193,24 +192,17 @@ class MainWindow(QMainWindow):
             self.filename = None
             self.dirty = True
             self.showImage()
-            self.sizeLabel.setText("{} x {}".format(self.image.width(),
-                                                      self.image.height()))
+            self.sizeLabel.setText("{} x {}".format(self.image.width(), self.image.height()))
             self.updateStatus("Created new image")
-
 
     def fileOpen(self):
         if not self.okToContinue():
             return
-        dir = (os.path.dirname(self.filename)
-               if self.filename is not None else ".")
-        formats = (["*.{}".format(format.data().decode("ascii").lower())
-                for format in QImageReader.supportedImageFormats()])
-        fname = QFileDialog.getOpenFileName(self,
-                "Image Changer - Choose Image", dir,
-                "Image files ({})".format(" ".join(formats)))
+        dir = (os.path.dirname(self.filename) if self.filename is not None else ".")
+        formats = (["*.{}".format(format.data().decode("ascii").lower()) for format in QImageReader.supportedImageFormats()])
+        fname = QFileDialog.getOpenFileName(self, "Image Changer - Choose Image", dir, "Image files ({})".format(" ".join(formats)))
         if fname:
             self.loadFile(fname)
-
 
     def loadFile(self, fname=None):
         if fname is None:
@@ -235,8 +227,7 @@ class MainWindow(QMainWindow):
                 self.filename = fname
                 self.showImage()
                 self.dirty = False
-                self.sizeLabel.setText("{} x {}".format(
-                                       image.width(), image.height()))
+                self.sizeLabel.setText("{} x {}".format(image.width(), image.height()))
                 message = "Loaded {}".format(os.path.basename(fname))
             self.updateStatus(message)
 
@@ -257,20 +248,15 @@ class MainWindow(QMainWindow):
                 self.dirty = False
                 return True
             else:
-                self.updateStatus("Failed to save {}".format(
-                                  self.filename))
+                self.updateStatus("Failed to save {}".format(self.filename))
                 return False
-
 
     def fileSaveAs(self):
         if self.image.isNull():
             return True
         fname = self.filename if self.filename is not None else "."
-        formats = (["*.{}".format(format.data().decode("ascii").lower())
-                for format in QImageWriter.supportedImageFormats()])
-        fname = QFileDialog.getSaveFileName(self,
-                "Image Changer - Save Image", fname,
-                "Image files ({})".format(" ".join(formats)))
+        formats = (["*.{}".format(format.data().decode("ascii").lower()) for format in QImageWriter.supportedImageFormats()])
+        fname = QFileDialog.getSaveFileName(self, "Image Changer - Save Image", fname, "Image files ({})".format(" ".join(formats)))
         if fname:
             if "." not in fname:
                 fname += ".png"
@@ -278,7 +264,6 @@ class MainWindow(QMainWindow):
             self.filename = fname
             return self.fileSave()
         return False
-
 
     def filePrint(self):
         if self.image.isNull():
@@ -292,10 +277,8 @@ class MainWindow(QMainWindow):
             rect = painter.viewport()
             size = self.image.size()
             size.scale(rect.size(), Qt.KeepAspectRatio)
-            painter.setViewport(rect.x(), rect.y(), size.width(),
-                                size.height())
+            painter.setViewport(rect.x(), rect.y(), size.width(), size.height())
             painter.drawImage(0, 0, self.image)
-
 
     def editInvert(self, on):
         if self.image.isNull():
@@ -305,16 +288,13 @@ class MainWindow(QMainWindow):
         self.dirty = True
         self.updateStatus("Inverted" if on else "Uninverted")
 
-
     def editSwapRedAndBlue(self, on):
         if self.image.isNull():
             return
         self.image = self.image.rgbSwapped()
         self.showImage()
         self.dirty = True
-        self.updateStatus(("Swapped Red and Blue"
-                           if on else "Unswapped Red and Blue"))
-
+        self.updateStatus(("Swapped Red and Blue" if on else "Unswapped Red and Blue"))
 
     def editUnMirror(self, on):
         if self.image.isNull():
@@ -324,7 +304,6 @@ class MainWindow(QMainWindow):
         if self.mirroredvertically:
             self.editMirrorVertical(False)
 
-
     def editMirrorHorizontal(self, on):
         if self.image.isNull():
             return
@@ -332,9 +311,7 @@ class MainWindow(QMainWindow):
         self.showImage()
         self.mirroredhorizontally = not self.mirroredhorizontally
         self.dirty = True
-        self.updateStatus(("Mirrored Horizontally"
-                           if on else "Unmirrored Horizontally"))
-
+        self.updateStatus(("Mirrored Horizontally" if on else "Unmirrored Horizontally"))
 
     def editMirrorVertical(self, on):
         if self.image.isNull():
@@ -343,19 +320,14 @@ class MainWindow(QMainWindow):
         self.showImage()
         self.mirroredvertically = not self.mirroredvertically
         self.dirty = True
-        self.updateStatus(("Mirrored Vertically"
-                           if on else "Unmirrored Vertically"))
-
+        self.updateStatus(("Mirrored Vertically" if on else "Unmirrored Vertically"))
 
     def editZoom(self):
         if self.image.isNull():
             return
-        percent, ok = QInputDialog.getInteger(self,
-                "Image Changer - Zoom", "Percent:",
-                self.zoomSpinBox.value(), 1, 400)
+        percent, ok = QInputDialog.getInteger(self, "Image Changer - Zoom", "Percent:", self.zoomSpinBox.value(), 1, 400)
         if ok:
             self.zoomSpinBox.setValue(percent)
-
 
     def showImage(self, percent=None):
         if self.image.isNull():
@@ -368,7 +340,6 @@ class MainWindow(QMainWindow):
         image = self.image.scaled(width, height, Qt.KeepAspectRatio)
         self.imageLabel.setPixmap(QPixmap.fromImage(image))
 
-
     def helpAbout(self):
         QMessageBox.about(self, "About Image Changer",
                 """<b>Image Changer</b> v {0}
@@ -380,7 +351,6 @@ class MainWindow(QMainWindow):
                 __version__, platform.python_version(),
                 QT_VERSION_STR, PYQT_VERSION_STR,
                 platform.system()))
-
 
     def helpHelp(self):
         form = helpform.HelpForm("index.html", self)
