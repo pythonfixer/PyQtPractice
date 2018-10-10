@@ -217,7 +217,7 @@ class MainWindow(QMainWindow):
             self.filename = None
             image = QImage(fname)
             if image.isNull():
-                message = "Failed to load {}".format(fname)
+                message = "Failed to read {}".format(fname)
             else:
                 self.addRecentFile(fname)
                 self.image = QImage()
