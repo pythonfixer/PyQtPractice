@@ -343,9 +343,9 @@ class MainWindow(QMainWindow):
     def helpAbout(self):
         QMessageBox.about(self, "About Image Changer",
                 """<b>Image Changer</b> v {0}
-                <p>Copyright &copy; 2008-10 Qtrac Ltd. 
+                <p>Copyright &copy; 2008-10 Qtrac Ltd.
                 All rights reserved.
-                <p>This application can be used to perform
+                <P>This application can be used to perform
                 simple image manipulations.
                 <p>Python {1} - Qt {2} - PyQt {3} on {4}""".format(
                 __version__, platform.python_version(),
