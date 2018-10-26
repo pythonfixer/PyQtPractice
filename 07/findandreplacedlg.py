@@ -5,7 +5,7 @@ import ui_findandreplacedlg
 
 MAC = True
 try:
-    from PyQt4.QtGui import qt_mac_set_native_manubar
+    from PyQt4.QtGui import qt_mac_set_native_menubar
 except ImportError:
     MAC = False
 
@@ -24,7 +24,7 @@ class FindAndReplaceDlg(QDialog, ui_findandreplacedlg.Ui_FindAndReplaceDlg):
         self.updateUi()
 
     @pyqtSignature("QString")
-    def on_findLineEdit_textEdited(self):
+    def on_findLineEdit_textEdited(self, text):
         self.__index = 0
         self.updateUi()
 
