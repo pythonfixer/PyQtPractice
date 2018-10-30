@@ -49,6 +49,16 @@ class FindAndReplaceDlg(QDialog, ui_findandreplacedlg.Ui_FindAndReplaceDlg):
         else:
             self.emit(SIGNAL("notfound"))
 
+    @pyqtSignature("")
+    def on_replaceButton_clicked(self):
+        regex = self.makeRegex()
+        self.__text = regex.sub(self.replaceLineEdit.text(), self.__text, 1)
+
+    @pyqtSignature("")
+    def on_replaceAllButton_clicked(self):
+        regex = self.makeRegex()
+        self.__text = regex.sub(self.replaceLineEdit.text(), self.__text)
+
     def updateUi(self):
         enable = bool(self.findLineEdit.text())
         self.findButton.setEnabled(enable)
@@ -59,12 +69,30 @@ class FindAndReplaceDlg(QDialog, ui_findandreplacedlg.Ui_FindAndReplaceDlg):
         return self.__text
 
 if __name__ == "__main__":
-
     import sys
 
-    text = "Hello"
+    text = """US experience shows that, unlike traditional patents,
+software patents do not encourage innovation and R&D, quite the
+contrary. In particular they hurt small and medium-sized enterprises
+and generally newcomers in the market. They will just weaken the market
+and increase spending on patents and litigation, at the expense of
+technological innovation and research. Especially dangerous are
+attempts to abuse the patent system by preventing interoperability as a
+means of avoiding competition with technological ability.
+--- Extract quoted from Linus Torvalds and Alan Cox's letter
+to the President of the European Parliament
+http://www.effi.org/patentit/patents_torvalds_cox.html"""
+
+    def found(where):
+        print("Found at {}".format(where))
+
+    def nomore():
+        print("No more found")
 
     app = QApplication(sys.argv)
     form = FindAndReplaceDlg(text)
+    form.connect(form, SIGNAL("found"), found)
+    form.connect(form, SIGNAL("notfound"), nomore)
     form.show()
     app.exec_()
+    print(form.text())
