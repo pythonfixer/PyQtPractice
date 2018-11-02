@@ -90,6 +90,8 @@ class Ui_TicketOrderDlg(object):
         self.label_5.setBuddy(self.amountLineEdit)
 
         self.retranslateUi(TicketOrderDlg)
+        QtCore.QObject.connect(self.buttonBox, QtCore.SIGNAL(_fromUtf8("accepted()")), TicketOrderDlg.accept)
+        QtCore.QObject.connect(self.buttonBox, QtCore.SIGNAL(_fromUtf8("rejected()")), TicketOrderDlg.reject)
         QtCore.QMetaObject.connectSlotsByName(TicketOrderDlg)
 
     def retranslateUi(self, TicketOrderDlg):
