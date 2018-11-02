@@ -14,6 +14,13 @@ class TicketOrderDlg(QDialog, ui_ticketorderdlg2.Ui_TicketOrderDlg):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setupUi(self)
+
+        now = QDateTime.currentDateTime()
+        rangeStart = now.addDays(1)
+        rangeEnd = now.addYears(1)
+        self.whenDateTimeEdit.setCalendarPopup(True)
+        self.whenDateTimeEdit.setDateTimeRange(rangeStart, rangeEnd)
+
         if not MAC:
             self.buttonBox.setFocusPolicy(Qt.NoFocus)
         self.updateUi()
@@ -49,13 +56,6 @@ if __name__ == "__main__":
 
     app = QApplication(sys.argv)
     form = TicketOrderDlg()
-
-    now = QDateTime.currentDateTime()
-    rangeStart = now.addDays(1)
-    rangeEnd = now.addYears(1)
-    form.whenDateTimeEdit.setCalendarPopup(True)
-    form.whenDateTimeEdit.setDateTimeRange(rangeStart, rangeEnd)
-
     form.show()
     app.exec_()
     result = form.result()
