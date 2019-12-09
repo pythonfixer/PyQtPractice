@@ -146,7 +146,7 @@ class ShipContainer(object):
 class ShipTableModel(QAbstractTableModel):
 
     def __init__(self, filename=""):
-        super(ShipTableModel, self).__init__()
+        super().__init__()
         self.filename = filename
         self.dirty = False
         self.ships = []
@@ -160,22 +160,18 @@ class ShipTableModel(QAbstractTableModel):
 
 
     def sortByCountryOwner(self):
-        self.ships = sorted(self.ships,
-                            key=lambda x: (x.country, x.owner, x.name))
+        self.ships = sorted(self.ships, key=lambda x: (x.country, x.owner, x.name))
         self.reset()
 
 
     def flags(self, index):
         if not index.isValid():
             return Qt.ItemIsEnabled
-        return Qt.ItemFlags(
-                QAbstractTableModel.flags(self, index)|
-                Qt.ItemIsEditable)
+        return Qt.ItemFlags(QAbstractTableModel.flags(self, index)|Qt.ItemIsEditable)
 
 
     def data(self, index, role=Qt.DisplayRole):
-        if (not index.isValid() or
-            not (0 <= index.row() < len(self.ships))):
+        if (not index.isValid() or not (0 <= index.row() < len(self.ships))):
             return None
         ship = self.ships[index.row()]
         column = index.column()
@@ -204,8 +200,7 @@ class ShipTableModel(QAbstractTableModel):
             else:
                 return QColor(Qt.red)
         elif role == Qt.BackgroundColorRole:
-            if ship.country in ("Bahamas", "Cyprus", "Denmark",
-                    "France", "Germany", "Greece"):
+            if ship.country in ("Bahamas", "Cyprus", "Denmark", "France", "Germany", "Greece"):
                 return QColor(250, 230, 250)
             elif ship.country in ("Hong Kong", "Japan", "Taiwan"):
                 return QColor(250, 250, 230)
@@ -260,8 +255,7 @@ class ShipTableModel(QAbstractTableModel):
             elif column == TEU:
                 ship.teu = int(value)
             self.dirty = True
-            self.emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),
-                      index, index)
+            self.emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"), index, index)
             return True
         return False
 
@@ -269,8 +263,7 @@ class ShipTableModel(QAbstractTableModel):
     def insertRows(self, position, rows=1, index=QModelIndex()):
         self.beginInsertRows(QModelIndex(), position, position + rows - 1)
         for row in range(rows):
-            self.ships.insert(position + row,
-                              Ship(" Unknown", " Unknown", " Unknown"))
+            self.ships.insert(position + row, Ship(" Unknown", " Unknown", " Unknown"))
         self.endInsertRows()
         self.dirty = True
         return True
@@ -278,8 +271,7 @@ class ShipTableModel(QAbstractTableModel):
 
     def removeRows(self, position, rows=1, index=QModelIndex()):
         self.beginRemoveRows(QModelIndex(), position, position + rows - 1)
-        self.ships = (self.ships[:position] +
-                      self.ships[position + rows:])
+        self.ships = (self.ships[:position] + self.ships[position + rows:])
         self.endRemoveRows()
         self.dirty = True
         return True
@@ -309,8 +301,7 @@ class ShipTableModel(QAbstractTableModel):
                 country = stream.readQString()
                 description = stream.readQString()
                 teu = stream.readInt32()
-                self.ships.append(Ship(name, owner, country, teu,
-                                       description))
+                self.ships.append(Ship(name, owner, country, teu, description))
                 self.owners.add(owner)
                 self.countries.add(country)
             self.dirty = False
