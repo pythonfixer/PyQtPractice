@@ -346,7 +346,7 @@ class ShipTableModel(QAbstractTableModel):
 class ShipDelegate(QStyledItemDelegate):
 
     def __init__(self, parent=None):
-        super(ShipDelegate, self).__init__(parent)
+        super().__init__(parent)
 
 
     def paint(self, painter, option, index):
@@ -356,14 +356,10 @@ class ShipDelegate(QStyledItemDelegate):
             document = QTextDocument()
             document.setDefaultFont(option.font)
             if option.state & QStyle.State_Selected:
-                document.setHtml("<font color={}>{}</font>".format(
-                        palette.highlightedText().color().name(), text))
+                document.setHtml("<font color={}>{}</font>".format(palette.highlightedText().color().name(), text))
             else:
                 document.setHtml(text)
-            color = (palette.highlight().color()
-                     if option.state & QStyle.State_Selected
-                     else QColor(index.model().data(index,
-                                 Qt.BackgroundColorRole)))
+            color = (palette.highlight().color() if option.state & QStyle.State_Selected else QColor(index.model().data(index, Qt.BackgroundColorRole)))
             painter.save()
             painter.fillRect(option.rect, color)
             painter.translate(option.rect.x(), option.rect.y())
@@ -405,17 +401,14 @@ class ShipDelegate(QStyledItemDelegate):
             return combobox
         elif index.column() == NAME:
             editor = QLineEdit(parent)
-            self.connect(editor, SIGNAL("returnPressed()"),
-                         self.commitAndCloseEditor)
+            self.connect(editor, SIGNAL("returnPressed()"), self.commitAndCloseEditor)
             return editor
         elif index.column() == DESCRIPTION:
             editor = richtextlineedit.RichTextLineEdit(parent)
-            self.connect(editor, SIGNAL("returnPressed()"),
-                         self.commitAndCloseEditor)
+            self.connect(editor, SIGNAL("returnPressed()"), self.commitAndCloseEditor)
             return editor
         else:
-            return QStyledItemDelegate.createEditor(self, parent, option,
-                                                    index)
+            return QStyledItemDelegate.createEditor(self, parent, option, index)
 
 
     def commitAndCloseEditor(self):
